@@ -2,25 +2,34 @@
 
 import Link from "next/link";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import GameDetail from "@/components/home/GameDetail";
 import GameList from "@/components/home/GameList";
 
 type GameInfo = {
   name: string;
-  genre: string;
+  // genre: string;
 };
 
 export default function Home() {
   const [currentGame, setCurrentGame] = useState({
     name: "default",
-    genre: "string",
   });
 
+  // NOTE: Use SWR for data fetching
+  // Source: https://swr.vercel.app/
+
   return (
-    <main className="flex text-neutral-200 min-h-screen flex-col items-center justify-between">
-      <div className="bg-steam-header w-full h-[100px] flex flex-row justify-between pl-5 pr-5">
+    <main
+      className="text-neutral-200 min-screen
+                  relative
+                  flex flex-col
+                  items-center"
+    >
+      {/* <main className="test"> */}
+      {/* Header */}
+      <nav className="bg-steam-header w-full h-[100px] flex flex-row justify-between pl-5 pr-5">
         <div className="mt-5 ml-6">Logo</div>
         <div className="font-semibold text-2xl mt-7 w-90 p-2">
           <Link href="/home" className="mr-4 hover:text-neutral-500">
@@ -35,15 +44,15 @@ export default function Home() {
             sign out
           </button>
         </div>
-      </div>
+      </nav>
 
       {/* Game List */}
-      <div className="w-full h-auto flex flex-row">
+      <div className="w-full h-[calc(100vh-100px)] flex flex-row">
         <GameDetail currentGame={currentGame} />
         <GameList setCurrentGame={setCurrentGame} />
       </div>
 
-      <div className="w-full">Footer</div>
+      <footer className="w-full">Footer</footer>
     </main>
   );
 }

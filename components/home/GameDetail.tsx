@@ -2,7 +2,7 @@ import Image from "next/image";
 
 type GameInfo = {
   name: string;
-  genre: string;
+  // genre: string;
 };
 
 type GameDetailProp = {
@@ -11,7 +11,11 @@ type GameDetailProp = {
 
 export default function GameDetail({ currentGame }: GameDetailProp) {
   return (
-    <div className="w-[40%] border-2 border-rose-600 h-screen m-1 flex flex-col justify-start items-center pt-4">
+    <div
+      className="w-[40%] border-2 border-rose-600 
+                    m-1 pt-4
+                    flex flex-col justify-start items-center "
+    >
       <Image
         // TODO: change photo later
         src="/placeholder-image.jpg"
