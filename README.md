@@ -14,10 +14,7 @@
 
 ## Todo:
 
-- Build UI ()
-- Find an api to fetch image for games?
-- Add Motiva Font
-- Continue API routes (write tests)
+- Check Todo
 
 ## Next.JS Note
 
