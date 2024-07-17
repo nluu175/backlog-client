@@ -11,8 +11,8 @@ import { HomePageContext } from "@/app/_hooks/HomePageContext";
 
 export default function Home() {
   const [currentGame, setCurrentGame] = useState({
-    steam_app_id: 0,
-    name: "default",
+    steam_app_id: 570,
+    name: "Dota 2 (Default for Test)",
   });
 
   // NOTE: Use SWR for data fetching
