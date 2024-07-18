@@ -6,7 +6,7 @@
   > - Game Detail: display the detail of the game
   > - Game List: list of games
 - [optional] Game List: supports Card View and List View
-
+- Game List: fallback image does not work
 - Game List width should be fixed => Game Card (Image) should be fixed as well
 - Pagination bar
 

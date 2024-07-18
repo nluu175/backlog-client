@@ -8,52 +8,18 @@ import { BacklogInfo } from "@/app/_types/types";
 
 import { HomePageContext } from "@/app/_hooks/HomePageContext";
 
-type GameItemCardProps = {
-  gameInfo: BacklogInfo;
-};
-
-function GameItemCard({ gameInfo }: GameItemCardProps) {
-  let { ...contextData } = useContext(HomePageContext);
-  const { setCurrentGame } = contextData;
-
-  const imageSource = `https://cdn.cloudflare.steamstatic.com/steam/apps/${gameInfo.steam_app_id}/capsule_616x353.jpg`;
-
-  return (
-    <div
-      // border-2 border-x-zinc-950
-      className="
-                m-3 relative w-[95%] h-[200px] w-min-[800px]
-                transform transition-transform duration-300 hover:scale-105
-                overflow-x-auto
-                flex flex-col justify-center items-center
-                "
-      key={gameInfo.name}
-      onClick={() => {
-        setCurrentGame(gameInfo);
-      }}
-    >
-      <Image
-        src={imageSource}
-        alt="Game Thumbnail"
-        className="h-auto max-w-full rounded-lg"
-        width={0}
-        height={0}
-        sizes="100vw"
-        style={{ width: "100%", height: "auto" }} // optional
-      />
-      {/* {gameInfo.name} */}
-    </div>
-  );
-}
+import GameItemCard from "./GameItemCard";
 
 export default function GameList() {
   let { ...contextData } = useContext(HomePageContext);
+
+  const { currentGame, setCurrentGame } = contextData;
 
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
   // page config
   const PAGE_NUMBER = 10;
-  const PAGE_SIZE = 16;
+  const PAGE_SIZE = 20;
 
   const requestUrl = `http://127.0.0.1:8000/backlog/backlogs/?page=${PAGE_NUMBER}&size=${PAGE_SIZE}`;
 
@@ -71,12 +37,14 @@ export default function GameList() {
   if (error) return <div>Failed to load</div>;
   if (!data) return <div>Loading...</div>;
 
+  // console.log(data);
+
   return (
     <div
       className="w-[60%] m-1
-                grid grid-cols-4 grid-flow-row gap-4 
+                grid grid-cols-4 grid-flow-row gap-1 
                 overflow-y-auto
-                "
+                p-3"
     >
       {data.results.map((backlog: BacklogInfo) => (
         <GameItemCard key={backlog.id} gameInfo={backlog} />

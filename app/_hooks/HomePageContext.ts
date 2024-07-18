@@ -5,8 +5,8 @@ import { BacklogInfo } from "@/app/_types/types";
 type CurrentGame = { steam_app_id: number; name: string };
 
 type GameDetailContextProp = {
-  currentGame: CurrentGame;
-  setCurrentGame: React.Dispatch<React.SetStateAction<CurrentGame>>;
+  currentGame: BacklogInfo;
+  setCurrentGame: React.Dispatch<React.SetStateAction<BacklogInfo>>;
 };
 
 const HomePageContext = createContext<GameDetailContextProp | undefined>(

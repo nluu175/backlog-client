@@ -6,6 +6,9 @@ type BacklogInfo = {
   id?: UUID;
   name: string;
   steam_app_id: number;
+  playtime: number; // in minutes
+  rating: number;
+  status: number;
 };
 
 export { BacklogInfo };
