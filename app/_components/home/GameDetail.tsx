@@ -33,7 +33,7 @@ export default function GameDetail() {
   return (
     <div
       className="
-                w-[40%] m-1 pt-4
+                w-[30%] m-1 pt-4
                 flex flex-col justify-start items-center
                 border-2 border-green-50
                 "

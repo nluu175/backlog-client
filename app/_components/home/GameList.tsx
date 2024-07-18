@@ -41,7 +41,7 @@ export default function GameList() {
 
   return (
     <div
-      className="w-[60%] m-1
+      className="w-[70%] m-1
                 grid grid-cols-4 grid-flow-row gap-1 
                 overflow-y-auto
                 p-3"
