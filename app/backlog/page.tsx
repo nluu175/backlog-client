@@ -8,6 +8,7 @@ import { HomePageContext } from "@/app/_hooks/HomePageContext";
 
 export default function Home() {
   const [currentGame, setCurrentGame] = useState({
+    id: "af3b0f33-4118-4ea3-94bb-d2e95290a8dd",
     steam_app_id: 570,
     name: "Dota 2 (Default for Test)",
     playtime: 0,
@@ -31,8 +32,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        <footer className="w-full">Footer</footer>
       </main>
     </HomePageContext.Provider>
   );

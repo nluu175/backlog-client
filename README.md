@@ -31,3 +31,13 @@
 - https://cdn.cloudflare.steamstatic.com/steam/apps/1569040/capsule_616x353.jpg
 - https://cdn.cloudflare.steamstatic.com/steam/apps/1569040/header.jpg
 - https://cdn.cloudflare.steamstatic.com/steam/apps/1569040/capsule_231x87.jpg
+
+## TODO
+
+- Set Min-Width for game list component.
+- Add media-query for different screen sizes.
+
+- Add filter
+- Add search bar
+- Move "Profile" tab position on headbar
+- 

@@ -23,6 +23,10 @@ export default function GameDetail() {
   const { currentGame } = contextData;
 
   const [imageError, setImageError] = useState(false);
+  const [rating, setRating] = useState(currentGame.rating);
+  const [hoveredRating, setHoveredRating] = useState(0);
+  const [updateError, setUpdateError] = useState<string | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const imageSrc = `https://cdn.cloudflare.steamstatic.com/steam/apps/${currentGame.steam_app_id}/hero_capsule.jpg`;
   const storeAddress = `https://store.steampowered.com/app/${currentGame.steam_app_id}/`;
@@ -30,10 +34,54 @@ export default function GameDetail() {
 
   useEffect(() => {
     setImageError(false);
-  }, [currentGame.steam_app_id]);
+    setRating(currentGame.rating);
+  }, [currentGame.steam_app_id, currentGame.rating]);
 
   const handleImageError = () => {
     setImageError(true);
+  };
+
+  const handleStarClick = async (selectedRating: number) => {
+    setIsUpdating(true);
+    setUpdateError(null);
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/backlogs/${currentGame.id}/`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            rating: selectedRating.toString(),
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to update rating: ${response.statusText}`);
+      }
+
+      // Update local state after successful API call
+      setRating(selectedRating);
+    } catch (error) {
+      setUpdateError(
+        error instanceof Error ? error.message : "Failed to update rating"
+      );
+      // Revert to previous rating on error
+      setRating(currentGame.rating);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleStarHover = (hoveredValue: number) => {
+    setHoveredRating(hoveredValue);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredRating(0);
   };
 
   return (
@@ -57,37 +105,52 @@ export default function GameDetail() {
               <h3 className="text-gray-300 font-medium text-xl mb-2 line-clamp-1 px-4">
                 {currentGame.name}
               </h3>
-              <p className="text-gray-500 text-base">
-                Image not available
-              </p>
+              <p className="text-gray-500 text-base">Image not available</p>
             </div>
           </div>
         )}
       </div>
 
       <div className="p-6">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col gap-3 mb-4">
           <h2 className="text-2xl font-bold text-white truncate">
             {currentGame.name}
           </h2>
-          <div className="flex items-center gap-1">
-            {[...Array(5)].map((_, index) => (
-              <Star
-                key={index}
-                size={24}
-                className={`${
-                  index < Math.round(currentGame.rating)
-                    ? getRatingColor(currentGame.rating)
-                    : "text-gray-600"
-                }`}
-                fill={
-                  index < Math.round(currentGame.rating)
-                    ? "currentColor"
-                    : "none"
-                }
-              />
-            ))}
+          <div className="flex items-center" onMouseLeave={handleMouseLeave}>
+            {[...Array(5)].map((_, index) => {
+              const starValue = index + 1;
+              const isHovered = starValue <= hoveredRating;
+              const isRated = starValue <= rating;
+              const displayRating = hoveredRating || rating;
+
+              return (
+                <Star
+                  key={index}
+                  size={24}
+                  className={`
+                    ${getRatingColor(displayRating)}
+                    ${
+                      isUpdating
+                        ? "opacity-50 pointer-events-none"
+                        : "cursor-pointer"
+                    }
+                    transition-colors
+                    duration-200
+                    hover:scale-110
+                  `}
+                  fill={isHovered || isRated ? "currentColor" : "none"}
+                  onClick={() => !isUpdating && handleStarClick(starValue)}
+                  onMouseEnter={() => handleStarHover(starValue)}
+                />
+              );
+            })}
           </div>
+
+          {updateError && (
+            <div className="mt-2 p-3 bg-red-500 bg-opacity-10 border border-red-500 rounded-lg">
+              <p className="text-red-500 text-sm">{updateError}</p>
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">
@@ -96,14 +159,12 @@ export default function GameDetail() {
               {convertPlayTime(currentGame.playtime)}
             </span>
             <span className="px-4 py-1 text-sm rounded-full bg-gray-700 text-gray-100">
-              Rating: {currentGame.rating}/5
+              Rating: {rating}/5
             </span>
           </div>
 
           <p className="text-gray-300 text-base leading-relaxed line-clamp-3">
-            Experience this incredible game that has captured the hearts of
-            players worldwide. Dive into an immersive world of adventure and
-            challenge.
+            This is a placeholder description
           </p>
 
           <Link
