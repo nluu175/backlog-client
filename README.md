@@ -1,43 +1,33 @@
 # Backlog Client
 
-## Platform supports:
+## Platform supports
 
 - Steam (Default)
 - Eshop (Not Yet)
 
-## User story
+## Features
 
-- As a user, I want to see all the games I have from my Steam Library
-- As a user, I want to add notes to the games I have in my Library
-- As a user, I want to look up games in my Library by name
-- As a user, I want to import all the games I have from my Steam Library to my local library
-
-## Todo:
-
-- Check Todo
-
-## Next.JS Note
-
-- Client vs. Server Component in NextJs
-- Layout vs. Template
-
-- Component Hierarchy
-
-  > - Layout > Template > ErrorBoundary(Error) > Suspense > ErrorBoundary(NotFound) > Page
-
-- Recovering from Errors
-
-- Error.tsx will not handle errors occur in the layout.tsx file
-
-- Pallarel Route: Slots in next.js (@folder). This is the way to render one or more pages within the same layout.
-
-- Default page on unmatched routes
+- See what games you have (eshop, steam).
+  > - Add notes to them.
+  > - Rate them
+  > - Order by playtime
+  > - Add tag or filters? Folders?
+- Support multiple platforms.
+- Suggest games to play based on what genre you wanna play.
+  > - Provide estimators? Maybe a planner
+- Wishlist (eshop, steam)
+- Check for sales.
+- Game release calendar
+  > - Keep track of the new for new games?
+- Keep track of the money you spent (for new games)
 
 ## Notes
 
-- Superuser
+- Source: https://stackoverflow.com/questions/53963328/how-do-i-get-a-hash-for-a-picture-form-a-steam-game
 
-```
-  username: minhluunhat
-  password: 1234567
-```
+- ---------------- Pics Format
+- http://media.steampowered.com/steamcommunity/public/images/apps/{appid}/{hash}.jpg
+- https://cdn.cloudflare.steamstatic.com/steam/apps/1569040/hero_capsule.jpg
+- https://cdn.cloudflare.steamstatic.com/steam/apps/1569040/capsule_616x353.jpg
+- https://cdn.cloudflare.steamstatic.com/steam/apps/1569040/header.jpg
+- https://cdn.cloudflare.steamstatic.com/steam/apps/1569040/capsule_231x87.jpg

@@ -10,6 +10,10 @@
 - Game List width should be fixed => Game Card (Image) should be fixed as well
 - Pagination bar
 
+## Game Page Detail
+
+## Game Suggestion
+
 ## Photo Sources
 
 - http://media.steampowered.com/steamcommunity/public/images/apps/{appid}/{hash}.jpg

@@ -43,7 +43,6 @@ export default function Home() {
           </a>
         </span>
       </div>
-      <div className="w-full">Footer</div>
     </main>
   );
 }
