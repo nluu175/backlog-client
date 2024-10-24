@@ -1,64 +1,61 @@
 "use client";
 
 import useSWR from "swr";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { BacklogInfo } from "@/app/_types/types";
 import { HomePageContext } from "@/app/_hooks/HomePageContext";
 import GameItemCard from "./GameItemCard";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import Loading from "./loading";
+import { useRouter, useSearchParams } from "next/navigation";
+import PaginationBar from "./PaginationBar";
 
 export default function GameList() {
   let { ...contextData } = useContext(HomePageContext);
   const { currentGame, setCurrentGame } = contextData;
-  const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isVisible, setIsVisible] = useState(true);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Get page from URL or default to 1
+  const urlPage = searchParams.get("page");
+  const [currentPage, setCurrentPage] = useState(
+    urlPage ? parseInt(urlPage) : 1
+  );
 
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
   // page config
-  // TODO: MOVE THIS TO ENUM
   const PAGE_SIZE = 16;
 
   const requestUrl = `http://127.0.0.1:8000/api/backlogs/?page=${currentPage}&size=${PAGE_SIZE}`;
 
   const { data, error, isLoading } = useSWR(requestUrl, fetcher);
 
+  // Handle transition effects when page changes
+  useEffect(() => {
+    setIsVisible(false);
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [currentPage]);
+
+  // Update URL when page changes
+  const handlePageChange = (page: number) => {
+    if (page === currentPage) return;
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", page.toString());
+    router.push(`?${params.toString()}`, { scroll: false });
+    setCurrentPage(page);
+  };
+
   if (error) return <div>Failed to load</div>;
-  if (isLoading) return <Loading />;
   if (!data) return <Loading />;
 
   const totalPages = Math.ceil(data.count / PAGE_SIZE);
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const getPageNumbers = () => {
-    const pageNumbers = [];
-    const maxVisiblePages = 5;
-
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-    if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(1, endPage - maxVisiblePages + 1);
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-      pageNumbers.push(i);
-    }
-
-    return pageNumbers;
-  };
 
   return (
     <div className="flex flex-col h-full">
@@ -108,7 +105,18 @@ export default function GameList() {
 
       {/* Game Cards Container */}
       <div className="w-[95%] mx-auto flex-grow overflow-y-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-6 py-4">
+        <div
+          className={`
+            grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-6 py-4
+            transition-all duration-300 transform
+            ${
+              isVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-4"
+            }
+            ${isLoading ? "pointer-events-none" : ""}
+          `}
+        >
           {data.results.map((backlog: BacklogInfo) => (
             <div key={backlog.id} className="flex justify-center">
               <GameItemCard gameInfo={backlog} />
@@ -117,53 +125,13 @@ export default function GameList() {
         </div>
       </div>
 
-      {/* Pagination Controls */}
-      <div className="flex items-center justify-center space-x-2 py-4 rounded-lg mx-4 p-4">
-        <button
-          onClick={handlePrevPage}
-          disabled={currentPage === 1 || isLoading}
-          className={`p-2 rounded-lg transition-colors duration-200 ${
-            currentPage === 1 || isLoading
-              ? "bg-indigo-200 cursor-not-allowed"
-              : "bg-indigo-600 hover:bg-indigo-700 text-white"
-          }`}
-        >
-          <ChevronLeft size={20} />
-        </button>
-
-        <div className="flex space-x-1">
-          {getPageNumbers().map((pageNum) => (
-            <button
-              key={pageNum}
-              onClick={() => setCurrentPage(pageNum)}
-              disabled={isLoading}
-              className={`px-4 py-2 rounded-lg transition-colors duration-200 font-medium ${
-                currentPage === pageNum
-                  ? "bg-indigo-600 text-white shadow-md"
-                  : "bg-white hover:bg-indigo-100 text-indigo-600 border border-indigo-200"
-              } ${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
-            >
-              {pageNum}
-            </button>
-          ))}
-        </div>
-
-        <button
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages || isLoading}
-          className={`p-2 rounded-lg transition-colors duration-200 ${
-            currentPage === totalPages || isLoading
-              ? "bg-indigo-200 cursor-not-allowed"
-              : "bg-indigo-600 hover:bg-indigo-700 text-white"
-          }`}
-        >
-          <ChevronRight size={20} />
-        </button>
-
-        <span className="text-sm font-medium text-indigo-800 bg-white px-4 py-2 rounded-lg shadow-sm border border-indigo-100">
-          Page {currentPage} of {totalPages}
-        </span>
-      </div>
+      {/* Pagination */}
+      <PaginationBar
+        currentPage={currentPage}
+        totalPages={totalPages}
+        isLoading={isLoading}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }
