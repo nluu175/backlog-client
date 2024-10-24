@@ -5,19 +5,20 @@ import { useContext, useState } from "react";
 import { BacklogInfo } from "@/app/_types/types";
 import { HomePageContext } from "@/app/_hooks/HomePageContext";
 import GameItemCard from "./GameItemCard";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import Loading from "./loading";
 
 export default function GameList() {
   let { ...contextData } = useContext(HomePageContext);
   const { currentGame, setCurrentGame } = contextData;
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
   // page config
   // TODO: MOVE THIS TO ENUM
-  const PAGE_SIZE = 20;
+  const PAGE_SIZE = 16;
 
   const requestUrl = `http://127.0.0.1:8000/api/backlogs/?page=${currentPage}&size=${PAGE_SIZE}`;
 
@@ -61,10 +62,59 @@ export default function GameList() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="w-[95%] mx-auto flex-grow grid grid-cols-4 gap-12 p-8 overflow-y-auto">
-        {data.results.map((backlog: BacklogInfo) => (
-          <GameItemCard key={backlog.id} gameInfo={backlog} />
-        ))}
+      {/* Search Bar */}
+      <div className="w-full">
+        <div className="w-[95%] mx-auto py-6">
+          <div className="relative max-w-2xl mx-auto">
+            <div className="relative">
+              <Search
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={20}
+              />
+              <input
+                type="text"
+                placeholder="Search games..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-gray-800 text-white placeholder-gray-400 
+                         rounded-xl border border-gray-700 focus:border-indigo-500 focus:ring-2 
+                         focus:ring-indigo-500 focus:ring-opacity-20 focus:outline-none
+                         transition-all duration-200 shadow-sm"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400
+                           hover:text-gray-300 transition-colors duration-200"
+                >
+                  <span className="sr-only">Clear search</span>
+                  <svg
+                    className="h-5 w-5"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Game Cards Container */}
+      <div className="w-[95%] mx-auto flex-grow overflow-y-auto px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-6 py-4">
+          {data.results.map((backlog: BacklogInfo) => (
+            <div key={backlog.id} className="flex justify-center">
+              <GameItemCard gameInfo={backlog} />
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Pagination Controls */}

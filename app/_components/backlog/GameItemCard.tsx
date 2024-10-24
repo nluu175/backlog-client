@@ -10,6 +10,7 @@ type GameItemCardProps = {
 
 export default function GameItemCard({ gameInfo }: GameItemCardProps) {
   let { ...contextData } = useContext(HomePageContext);
+
   const { setCurrentGame } = contextData;
   const [imageError, setImageError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
