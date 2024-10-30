@@ -1,5 +1,4 @@
 "use client";
-
 import useSWR from "swr";
 import { useContext, useState, useEffect } from "react";
 import { BacklogInfo } from "@/app/_types/types";
@@ -10,7 +9,11 @@ import Loading from "./loading";
 import { useRouter, useSearchParams } from "next/navigation";
 import PaginationBar from "./PaginationBar";
 
-export default function GameList() {
+// TODO: Move this to enum
+// page config
+const PAGE_SIZE = 16;
+
+const GameList = () => {
   let { ...contextData } = useContext(HomePageContext);
   const { currentGame, setCurrentGame } = contextData;
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,9 +29,6 @@ export default function GameList() {
   );
 
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
-  // page config
-  const PAGE_SIZE = 16;
 
   const requestUrl = `http://127.0.0.1:8000/api/backlogs/?page=${currentPage}&size=${PAGE_SIZE}`;
 
@@ -52,6 +52,7 @@ export default function GameList() {
     setCurrentPage(page);
   };
 
+  // TODO: See if we can use nextjs loading function
   if (error) return <div>Failed to load</div>;
   if (!data) return <Loading />;
 
@@ -134,4 +135,6 @@ export default function GameList() {
       />
     </div>
   );
-}
+};
+
+export default GameList;

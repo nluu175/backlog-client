@@ -8,7 +8,7 @@ type GameItemCardProps = {
   gameInfo: BacklogInfo;
 };
 
-export default function GameItemCard({ gameInfo }: GameItemCardProps) {
+const GameItemCard = ({ gameInfo }: GameItemCardProps) => {
   let { ...contextData } = useContext(HomePageContext);
 
   const { setCurrentGame } = contextData;
@@ -109,4 +109,6 @@ export default function GameItemCard({ gameInfo }: GameItemCardProps) {
       )}
     </div>
   );
-}
+};
+
+export default GameItemCard;

@@ -9,11 +9,15 @@ import { HomePageContext } from "@/app/_hooks/HomePageContext";
 export default function Home() {
   const [currentGame, setCurrentGame] = useState({
     id: "",
-    steam_app_id: -1,
     name: "",
-    playtime: 0,
-    rating: 0,
     status: 0,
+    rating: 0,
+    // steam_app_id is default at -1, meaning it's not a valid steam app id and no game is currently set
+    steam_app_id: -1,
+    comment: "",
+    playtime: 0,
+    favourite: false,
+    completed: false,
   });
 
   return (

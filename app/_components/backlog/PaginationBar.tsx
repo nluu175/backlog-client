@@ -7,12 +7,12 @@ interface PaginationBarProps {
   onPageChange: (page: number) => void;
 }
 
-export default function PaginationBar({
+const PaginationBar = ({
   currentPage,
   totalPages,
   isLoading,
   onPageChange,
-}: PaginationBarProps) {
+}: PaginationBarProps) => {
   const getPageNumbers = () => {
     const pageNumbers = [];
     const maxVisiblePages = 3;
@@ -145,4 +145,6 @@ export default function PaginationBar({
       </button>
     </div>
   );
-}
+};
+
+export default PaginationBar;

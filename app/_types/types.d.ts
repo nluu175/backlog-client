@@ -5,10 +5,13 @@ import { UUID } from "crypto";
 type BacklogInfo = {
   id: string;
   name: string;
-  steam_app_id: number;
-  playtime: number; // in minutes
-  rating: number;
   status: number;
+  rating: number;
+  steam_app_id: number;
+  comment: string;
+  playtime: number; // in minutes
+  favourite: boolean;
+  completed: boolean;
 };
 
 export { BacklogInfo };
